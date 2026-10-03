@@ -1,8 +1,14 @@
 {
   "phase": "01",
-  "status": "IN_IMPLEMENTATION",
+  "status": "READY_FOR_AUDIT",
   "generatedBy": "sesión de implementación, 2026-10-03",
-  "files": ["claude-code-env-denial.txt"],
+  "files": [
+    "summary.md",
+    "claude-code-env-denial.txt",
+    "branch-protection.txt",
+    "demo-pr-4-any-local-gate.txt",
+    "vercel-preview.txt"
+  ],
   "localVerification": {
     "date": "2026-10-03",
     "lint": "pass",
@@ -12,6 +18,13 @@
     "test:security": "pass (placeholder, sin RLS real hasta Fase 4)",
     "build": "pass",
     "test:e2e": "pass",
-    "test:int": "no ejecutado localmente (sin Docker disponible en esta máquina); se verifica en CI (runner de GitHub Actions con Docker nativo, servicio postgres:17)"
+    "test:int": "no ejecutado localmente (sin Docker disponible en esta máquina); verificado en CI real"
+  },
+  "ciVerification": {
+    "repo": "https://github.com/rjpython05/monday-wms-construccion",
+    "exampleGreenRun": "https://github.com/rjpython05/monday-wms-construccion/actions/runs/37140373807",
+    "branchProtection": "verificado (push directo real rechazado, GH006)",
+    "gateDemo": "4/4 (PRs #11, #12, #13 + bloqueo local de pre-commit)",
+    "vercelPreview": "verificado (PR #15, estado Ready)"
   }
 }
