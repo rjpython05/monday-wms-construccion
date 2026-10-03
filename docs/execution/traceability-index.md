@@ -14,7 +14,7 @@ Formato según `/docs/execution/master-plan.md` §10. Cada fila conecta un requi
 | AC-01-08 | Criterio de aceptación | Trunk-based, Conventional Commits, squash merge, plantilla de PR, CODEOWNERS   | 01   | Inspección de `.github/`, PR #8 real     | **Verificado**                         |
 | AC-01-09 | Criterio de aceptación | Branch protection activa                                                       | 01   | Push directo rechazado (GH006, real)     | **Verificado** (ver CHG-003, RSK-012)  |
 | AC-01-10 | Criterio de aceptación | CI bloquea errores intencionales                                               | 01   | PRs #11, #12, #13 + bloqueo local (T16)  | **Verificado**                         |
-| AC-01-11 | Criterio de aceptación | Preview deployment funciona                                                    | 01   | URL de preview en PR real                | Pendiente (requiere Vercel, T12)       |
+| AC-01-11 | Criterio de aceptación | Preview deployment funciona                                                    | 01   | URL de preview en PR real (#15)          | **Verificado** (ver evidencia T12)     |
 | AC-01-12 | Criterio de aceptación | Claude Code no lee `.env` ni despliega a prod                                  | 01   | Intento real denegado (T10)              | **Verificado** (ver evidencia)         |
 | SEC-001  | Seguridad              | Escaneo de secretos en cada PR e historial completo                            | 01   | PR #13 (secreto falso), rechazado        | **Verificado** (CI real)               |
 | SEC-002  | Seguridad              | SCA + Renovate/Dependabot                                                      | 01   | 7 PRs reales abiertos por Dependabot     | **Verificado** (dependabot.yml activo) |
