@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Claude Code local-only settings (per-developer, not shared)
+.claude/settings.local.json
+
+# Testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Vercel
+.vercel/
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
