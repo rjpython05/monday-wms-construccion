@@ -58,7 +58,7 @@ Ver §1 — brecha total en tooling/CI/repo (no existía nada); faltan `/docs/ru
 | # | Ambigüedad | Resolución | Fecha |
 |---|---|---|---|
 | 1 | Versión mayor de PostgreSQL para CI/staging/producción | **PostgreSQL 17**, verificado contra changelog oficial de Supabase (PG14 se retira 2026-07-01; sin conflicto de extensiones con este diseño). Registrado como addendum de ADR-006. | 2026-10-03 |
-| 2 | Coordenadas de repositorio remoto y revisor humano | GitHub, usuario `rjpython05`, repositorio **privado** `monday-wms-construccion`, `CODEOWNER` único = `rjpython05`. Vercel se conecta por integración nativa de GitHub. | 2026-10-03 |
+| 2 | Coordenadas de repositorio remoto y revisor humano | GitHub, usuario `rjpython05`, repositorio `monday-wms-construccion`, `CODEOWNER` único = `rjpython05`. Vercel se conecta por integración nativa de GitHub. **Enmendado (CHG-003, 2026-10-03):** repositorio cambiado de privado a **público** porque GitHub exige plan Pro para branch protection en repos privados de cuenta individual (verificado en vivo, HTTP 403); el RT eligió público para evitar el costo y conservar branch protection real. | 2026-10-03 (enmendado el mismo día) |
 | 3 | Destino de `spikes/phase-00-viability/` | **Eliminado** del árbol de trabajo (evidencia ya incorporada a los documentos de Fase 0 aprobados). Ejecutado en esta sesión. Pendiente aparte, no resuelto por esto: rotación de las credenciales reales que contenía, a cargo del RT en los paneles de Supabase y monday.com. | 2026-10-03 |
 
 ## 6. Riesgos técnicos, funcionales y de seguridad

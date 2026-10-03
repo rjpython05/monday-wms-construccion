@@ -81,3 +81,40 @@ Fase afectada: Fase 1 (dependencias), Fase 3 (autenticación)
 Documentos actualizados: docs/adr/ADR-007-monday-sdk-packages.md,
   docs/adr/ADR-008-monday-secrets-separation.md, docs/execution/risks.md (RSK-002, RSK-009)
 ```
+
+---
+
+```text
+CHG-003
+Fecha: 2026-10-03
+Solicitante: Implementador (sesión de implementación de Fase 1)
+Problema: La Ambigüedad 2 del análisis de Fase 1 (ver phase-01-engineering-controls.md §5)
+  había resuelto repositorio privado en GitHub. Al intentar activar branch protection en
+  `main` (AC-01-09) se verificó en vivo contra la API real de GitHub (no memoria, plan
+  maestro §5) que tanto el branch protection clásico como el sistema de rulesets devuelven
+  403 "Upgrade to GitHub Pro or make this repository public to enable this feature" para
+  repos privados de cuenta individual en el plan gratuito.
+Justificación: Se presentaron 3 opciones al RT (actualizar a GitHub Pro, hacer el repo
+  público, u omitir branch protection documentando el riesgo). El RT eligió explícitamente
+  hacer el repositorio público para evitar el costo de GitHub Pro y conservar branch
+  protection real y verificable.
+Impacto funcional: Ninguno.
+Impacto técnico: Visibilidad del repositorio `rjpython05/monday-wms-construccion` cambiada
+  de privado a público. Branch protection (required status checks: Pipeline, Escaneo de
+  secretos, Auditoría de dependencias; PR obligatorio; sin force-push; sin borrado) aplicada
+  y verificada con un intento real de push directo, rechazado por GitHub (GH006).
+Impacto en seguridad: Medio — el repositorio (documentación de gobierno, ADRs, reglas de
+  negocio, arquitectura) queda visible públicamente. Se confirmó que no contiene secretos
+  reales (escaneado con gitleaks en CI, ver job "Escaneo de secretos"). No cambia la
+  exigencia de nunca commitear credenciales reales (invariante #17 de CLAUDE.md).
+Impacto en datos y migraciones: Ninguno.
+Impacto en fases aprobadas: Ninguna fase está `APPROVED` todavía salvo Fase 0 (no afectada).
+Impacto en cronograma: Ninguno.
+Alternativas consideradas: GitHub Pro (descartada por costo, decisión del RT); omitir branch
+  protection (descartada, el RT prefirió mantener el control técnico real).
+Decisión: Aprobado (2026-10-03).
+Aprobado por: rjpython05@gmail.com (RT)
+Fase afectada: Fase 1 (Repositorio y controles de ingeniería)
+Documentos actualizados: docs/phases/phase-01-engineering-controls.md (§5, Ambigüedad 2),
+  docs/execution/risks.md (nuevo riesgo de exposición pública), docs/execution/phase-status.md
+```
