@@ -1,0 +1,22 @@
+Evidencia AC-01-11 / T12 — Preview deployment de Vercel
+Fecha: 2026-10-03
+
+Procedimiento:
+1. `vercel link` creó el proyecto `punto-shop/monday-wms-construccion`.
+2. Primer intento de `vercel link`/conexión de GitHub falló: "You need to
+   add a Login Connection to your GitHub account first." (requiere acción
+   del RT en el dashboard de Vercel, login connections). Resuelto por el RT.
+3. `vercel git connect` conectó el repositorio real
+   https://github.com/rjpython05/monday-wms-construccion.
+4. Primer PR real de verificación (#15) disparó un deployment que falló:
+   "Found invalid or discontinued Node.js Version: >=26.0.0 <27.0.0" —
+   Vercel no soporta Node 26 como runtime seleccionable todavía (solo
+   hasta 24.x). Corregido fijando Node 24.x en package.json/.nvmrc
+   (ver commit de esta rama).
+5. Tras el fix, el mismo PR #15 generó un deployment real con estado
+   "Ready": https://monday-wms-construccion-git-test-vercel-previ-07c241-punto-shop.vercel.app
+   (protegido por SSO de Vercel por defecto — comportamiento esperado,
+   no un fallo).
+
+Conclusión: AC-01-11 verificado con un Preview deployment real en un PR
+real. PR #15 cerrado sin merge tras la verificación.
