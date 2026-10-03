@@ -16,5 +16,18 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env["CI"],
     timeout: 120000,
+    env: {
+      DATABASE_URL:
+        "postgresql://wms_app:wms_local_dev_only@localhost:5433/wms_dev",
+      DIRECT_DATABASE_URL:
+        "postgresql://wms_app:wms_local_dev_only@localhost:5433/wms_dev",
+      MONDAY_CLIENT_ID: "e2e-dummy-client-id",
+      MONDAY_CLIENT_SECRET: "e2e-dummy-client-secret",
+      MONDAY_SIGNING_SECRET: "e2e-dummy-signing-secret",
+      SUPABASE_SERVICE_ROLE_KEY: "e2e-dummy-service-role-key",
+      UPSTASH_REDIS_URL: "https://e2e-dummy.upstash.io",
+      UPSTASH_REDIS_TOKEN: "e2e-dummy-redis-token",
+      NEXT_PUBLIC_MONDAY_CLIENT_ID: "e2e-dummy-client-id",
+    },
   },
 });

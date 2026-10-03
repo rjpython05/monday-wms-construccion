@@ -11,7 +11,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ignore-pattern .agents --ignore-pattern .claude/skills",
+    "lint": "eslint . --ignore-pattern .agents --ignore-pattern .claude/skills --ignore-pattern next-env.d.ts",
     "format": "prettier --check \"src/**/*.{ts,tsx,css}\" \"e2e/**/*.ts\" \"*.{ts,mjs,json}\" \".github/**/*.{yml,yaml}\" \"docker-compose.yml\"",
     "format:write": "prettier --write \"src/**/*.{ts,tsx,css}\" \"e2e/**/*.ts\" \"*.{ts,mjs,json}\" \".github/**/*.{yml,yaml}\" \"docker-compose.yml\"",
     "typecheck": "tsc --noEmit",
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "^1.55.0",
-    "@types/node": "^26.0.0",
+    "@types/node": "^24.0.0",
     "@types/pg": "^8.11.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
