@@ -23,6 +23,20 @@ Salida real del intento (no editada):
 
 Conclusión: el gate de §19 del plan maestro (any/@ts-ignore reintroduce bugs de tipos)
 funciona en dos capas redundantes — local (pre-commit) y CI (job `pipeline`, paso Lint).
-Esta evidencia cubre la capa local; las otras 3 demostraciones (ver ramas demo/broken-type,
-demo/failing-test, demo/fake-secret) cubren la capa de CI vía PR real una vez exista el
-repositorio remoto.
+Esta evidencia cubre la capa local. Las otras 3 demostraciones se ejecutaron como PRs
+reales contra el repositorio ya creado, todas con CI real corriendo (no simulado):
+
+  1/4 — Tipo roto: PR #11, rechazado por el job "Pipeline" (paso Tipos). Cerrado sin
+        merge: https://github.com/rjpython05/monday-wms-construccion/pull/11
+  2/4 — Prueba fallida: PR #12, rechazado por el job "Pipeline" (paso Pruebas
+        unitarias). Cerrado sin merge:
+        https://github.com/rjpython05/monday-wms-construccion/pull/12
+  3/4 — Secreto falso: PR #13, rechazado por el job "Escaneo de secretos (historial
+        completo)". Nota: el primer intento usó el valor de ejemplo oficial de AWS
+        (AKIAIOSFODNN7EXAMPLE), que resultó estar en el allowlist por defecto de
+        gitleaks (falso negativo real, corregido con un bloque PEM inventado que sí
+        dispara la regla genérica "private-key"). Cerrado sin merge:
+        https://github.com/rjpython05/monday-wms-construccion/pull/13
+  4/4 — any nuevo: bloqueado localmente antes de poder abrir PR (ver arriba).
+
+Las 4 demostraciones de T16 quedan completas (3 vía PR+CI real, 1 vía pre-commit real).
