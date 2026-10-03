@@ -81,18 +81,31 @@ jobs:
       - name: Build
         run: pnpm build
         env:
-          # Marcador no público (sin prefijo NEXT_PUBLIC_) usado solo para
-          # verificar en el paso siguiente que nunca llega al bundle de
-          # cliente (SEC-005). No es un secreto real.
-          AUDIT_SEC005_MARKER: "sec005-marker-9f3a7c21-must-not-leak-to-client"
+          # Valor canario no público (sin prefijo NEXT_PUBLIC_), consumido
+          # de verdad por src/app/audit-sec005-canary/page.tsx (solo existe
+          # si esta variable está seteada; en Vercel nunca lo está). No es
+          # un secreto real. Ver FND-01-09 (auditor-report-2.md): el
+          # chequeo anterior era tautológico porque nada leía el marcador.
+          AUDIT_SEC005_CANARY_VALUE: "sec005-canary-7f1e4b9c-must-leak-only-here"
 
-      - name: Verificación de que ningún valor no público llega al bundle de cliente (SEC-005)
+      - name: Verificación real de que ningún secreto llega al cliente (SEC-005)
         run: |
-          if grep -rF "sec005-marker-9f3a7c21-must-not-leak-to-client" .next/static 2>/dev/null; then
-            echo "::error::Un valor no público (sin prefijo NEXT_PUBLIC_) apareció en .next/static — SEC-005 violado"
+          MARKER="sec005-canary-7f1e4b9c-must-leak-only-here"
+          CANARY_PATH_PREFIX=".next/server/app/audit-sec005-canary"
+
+          if ! grep -rlF "$MARKER" .next/static .next/server 2>/dev/null | grep -q "^${CANARY_PATH_PREFIX}"; then
+            echo "::error::El canario de SEC-005 no apareció en ningún archivo bajo $CANARY_PATH_PREFIX* — el mecanismo de detección no funciona (el chequeo no demostraría nada)"
             exit 1
           fi
-          echo "OK: ningún valor no público apareció en el bundle de cliente (.next/static)"
+          echo "OK: el canario se detectó en su ubicación esperada — el chequeo es capaz de detectar una fuga real"
+
+          LEAKS=$(grep -rlF "$MARKER" .next/static .next/server 2>/dev/null | grep -v "^${CANARY_PATH_PREFIX}" || true)
+          if [ -n "$LEAKS" ]; then
+            echo "::error::El valor no público apareció fuera de la ruta canario (fuga real):"
+            echo "$LEAKS"
+            exit 1
+          fi
+          echo "OK: ningún otro artefacto servido al cliente (.next/static ni .next/server) contiene el valor no público"
 
       - name: Instalar navegadores de Playwright
         run: pnpm exec playwright install --with-deps chromium
