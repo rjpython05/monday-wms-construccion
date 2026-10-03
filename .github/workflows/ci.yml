@@ -18,7 +18,7 @@ env:
 
 jobs:
   pipeline:
-    name: Pipeline (lint → typecheck → unit → migración → integración → security → build → e2e)
+    name: Pipeline
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
