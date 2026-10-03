@@ -5,7 +5,7 @@ Fuente de verdad del estado de cada fase. Toda transición se registra aquí con
 | Fase | Nombre | Estado | Desde | Commit | Responsable | Notas |
 |---|---|---|---|---|---|---|
 | 00 | Normalización del blueprint y spikes de viabilidad | **APPROVED** | 2026-10-03 | — | RT | 16/16 ambigüedades resueltas, RBAC y 8 ADR + 2 CHG ratificados, 5/5 spikes reales ejecutados con evidencia. Riesgo residual aceptado: confirmar cámara en dispositivo móvil antes de Fase 16 (no bloqueante) |
-| 01 | Repositorio y controles de ingeniería | READY_FOR_AUDIT | 2026-10-03 | 966eec5 | Auditor IA (3ª sesión) | 3ª auditoría independiente: **APPROVE recomendado** (`docs/evidence/phase-01/auditor-report-3.md`). FND-01-09/10 corregidos de fondo (verificado con un vector de fuga deliberada distinto al de la 2ª auditoría); FND-01-11 corregido parcialmente (residuo: FND-01-12, manifest.json desactualizado, no bloqueante); FND-01-13 nuevo (no bloqueante, de gobierno: tensión de redacción entre "NO DEMOSTRADO" literal y §33, para que el RT aclare). 0 hallazgos S1/S2 abiertos. **Pendiente: decisión final de aprobación del RT (§7.2) — el auditor no puede auto-aprobar** |
+| 01 | Repositorio y controles de ingeniería | **APPROVED** | 2026-10-03 | fac5c72 | RT | Aprobación final del RT ("aprobado fase 1") tras 3 auditorías independientes (1ª y 2ª REJECT con correcciones reales verificadas; 3ª APPROVE, 0 hallazgos S1/S2 abiertos). Riesgos residuales aceptados sin bloquear: RSK-012 (CODEOWNER único), RSK-013 (rotación de credenciales del spike pendiente), RSK-017 (repo público), RSK-018 (`drizzle-orm`, revisar antes de Fase 4). FND-01-13 (tensión de redacción AC-01-09/§33) queda como backlog de gobierno, no bloqueante. Habilita el inicio de Fase 2 (Infraestructura de staging) |
 | 02 | Infraestructura de staging | NOT_STARTED | — | — | — | Depende de 01 |
 | 03 | Autenticación con monday.com 🔒 | NOT_STARTED | — | — | — | Depende de 02 |
 | 04 | Multi-tenencia y RLS 🔒⛔ | NOT_STARTED | — | — | — | Depende de 03 |
@@ -28,7 +28,7 @@ Fuente de verdad del estado de cada fase. Toda transición se registra aquí con
 | 22 | Producción y liberación gradual | NOT_STARTED | — | — | — | Depende de 21 |
 | 17 | Resiliencia offline 🔒 (post-MVP) | NOT_STARTED | — | — | — | Depende de 20 y datos de uso de 16 |
 
-**Fase activa:** 01 — Repositorio y controles de ingeniería (Fase 00 `APPROVED`, habilita el inicio de Fase 01).
+**Fase activa:** 02 — Infraestructura de staging (Fase 01 `APPROVED`, habilita el inicio de Fase 02).
 
 ## Historial de transiciones
 
@@ -57,3 +57,4 @@ Fuente de verdad del estado de cada fase. Toda transición se registra aquí con
 | 2026-10-03 | 01 | REJECTED | IN_IMPLEMENTATION | RT | 963e618 | RT autorizó corregir exclusivamente los hallazgos del 2º informe (§32.5) |
 | 2026-10-03 | 01 | IN_IMPLEMENTATION | READY_FOR_AUDIT | Implementador (sesión) | 1194dd2 | FND-01-09/10/11 corregidos (PR #22): canario real (`src/app/audit-sec005-canary/`) que prueba el detector de SEC-005 contra una fuga deliberada real (introducida y revertida en esta misma sesión); redacción de `traceability-index.md` alineada a los 3 estados canónicos de §10.2; `manifest.json` actualizado con el rastro completo de ambas auditorías. CI verde sobre `1194dd2`. Pendiente: 3ª auditoría independiente |
 | 2026-10-03 | 01 | READY_FOR_AUDIT | READY_FOR_AUDIT | Auditor IA (3ª sesión, sin contexto) | 966eec5 | 3ª auditoría independiente sobre el rango completo `a64fbe9..966eec5` (§32.4). Veredicto recomendado: **APPROVE**. Verificó FND-01-09 con un vector de fuga deliberada distinto al usado por el 2º auditor (Server Component en ruta anidada), confirmando que la corrección generaliza y no está sobreajustada. 0 hallazgos S1/S2 abiertos; 2 hallazgos S4 no bloqueantes nuevos (FND-01-12 manifest.json desactualizado, FND-01-13 tensión de redacción AC-01-09/§33, de gobierno). Informe: `/docs/evidence/phase-01/auditor-report-3.md`. El auditor no puede marcar APPROVED — decisión pendiente del RT |
+| 2026-10-03 | 01 | READY_FOR_AUDIT | **APPROVED** | RT | fac5c72 | Aprobación final del RT ("aprobado fase 1"). Fase 1 cerrada. Habilita el inicio de Fase 2 (Infraestructura de staging). Riesgos residuales aceptados: RSK-012, RSK-013, RSK-017, RSK-018 (todos con dueño y fecha de revisión); FND-01-13 registrado como backlog de gobierno no bloqueante |
