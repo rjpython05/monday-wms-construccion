@@ -9,7 +9,8 @@
     "demo-pr-4-any-local-gate.txt",
     "vercel-preview.txt",
     "auditor-report.md",
-    "auditor-report-2.md"
+    "auditor-report-2.md",
+    "auditor-report-3.md"
   ],
   "localVerification": {
     "date": "2026-10-03",
@@ -24,7 +25,7 @@
   },
   "ciVerification": {
     "repo": "https://github.com/rjpython05/monday-wms-construccion",
-    "exampleGreenRun": "https://github.com/rjpython05/monday-wms-construccion/actions/runs/37140373807",
+    "exampleGreenRun": "https://github.com/rjpython05/monday-wms-construccion/actions/runs/37145316208",
     "branchProtection": "verificado (push directo real rechazado, GH006)",
     "gateDemo": "4/4 (PRs #11, #12, #13 + bloqueo local de pre-commit)",
     "vercelPreview": "verificado (PR #15, estado Ready)"
@@ -36,15 +37,27 @@
       "findings": "FND-01-01 a FND-01-08",
       "report": "auditor-report.md"
     },
-    "corrections": {
+    "corrections1": {
       "commit": "65b2fd1 (PR #19)",
-      "additionalFix": "FND-01-09/10/11 (ver auditor-report-2.md), commit en PR fix/audit-fnd-01-09-sec005-real-check"
+      "fixes": "FND-01-01 a FND-01-08"
     },
     "audit2": {
       "verdict": "REJECT",
       "commitRange": "a64fbe9..963e618",
       "findings": "7/8 originales corregidos; FND-01-09 nuevo (SEC-005 tautológico), FND-01-10/11 menores",
       "report": "auditor-report-2.md"
+    },
+    "corrections2": {
+      "commit": "1194dd2 (PR #22)",
+      "ciRun": "https://github.com/rjpython05/monday-wms-construccion/actions/runs/37145316208",
+      "fixes": "FND-01-09/10/11"
+    },
+    "audit3": {
+      "verdict": "APPROVE",
+      "commitRange": "a64fbe9..966eec5",
+      "findings": "FND-01-09/10 corregidos de fondo; FND-01-11 corregido parcialmente (FND-01-12 nuevo, no bloqueante); FND-01-13 nuevo (no bloqueante, de gobierno)",
+      "report": "auditor-report-3.md",
+      "pendingForRT": "decisión final de aprobación de fase (§7.2); FND-01-12/13 quedan como backlog no bloqueante salvo que el RT decida atenderlos ahora"
     }
   }
 }
