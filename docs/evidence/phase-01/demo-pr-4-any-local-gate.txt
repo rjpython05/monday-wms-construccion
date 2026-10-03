@@ -1,0 +1,28 @@
+Evidencia T16 (4/4) — "any" nuevo, rechazado por el gate local antes de llegar a un PR
+Fecha: 2026-10-03
+
+A diferencia de las otras 3 demostraciones (tipo roto, prueba fallida, secreto falso),
+que sí se convirtieron en commits reales en ramas demo/* para abrir como PR, este caso
+fue rechazado un paso antes: el hook de pre-commit (husky + lint-staged) ejecuta
+`eslint --fix` sobre los archivos staged, y ESLint (regla no-explicit-any) rechazó el
+intento de commitear un `any` nuevo. El commit nunca llegó a crearse localmente, por lo
+que no hay una rama/PR para este caso — la propia infraestructura de Fase 1 (T4) impidió
+que el código llegara siquiera a existir en el historial de git.
+
+Salida real del intento (no editada):
+
+  $ git commit -m "test: any nuevo deliberado para demostración del gate (T16)"
+  ✖ eslint --fix:
+
+  C:\Users\20020032\Desktop\monday-wms-construccion\src\lib\demo-new-any.ts
+    4:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+    4:38  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+  ✖ 2 problems (2 errors, 0 warnings)
+  husky - pre-commit script failed (code 1)
+
+Conclusión: el gate de §19 del plan maestro (any/@ts-ignore reintroduce bugs de tipos)
+funciona en dos capas redundantes — local (pre-commit) y CI (job `pipeline`, paso Lint).
+Esta evidencia cubre la capa local; las otras 3 demostraciones (ver ramas demo/broken-type,
+demo/failing-test, demo/fake-secret) cubren la capa de CI vía PR real una vez exista el
+repositorio remoto.
