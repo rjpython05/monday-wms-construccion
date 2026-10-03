@@ -11,4 +11,8 @@ describe("getEnv", () => {
     expect(() => getEnv()).toThrowError(/Variables de entorno inválidas/);
     vi.unstubAllEnvs();
   });
+
+  it("assertion deliberadamente falsa para demostración del gate (T16)", () => {
+    expect(1).toBe(2);
+  });
 });
