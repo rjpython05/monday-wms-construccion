@@ -19,17 +19,17 @@ Next.js 15 (App Router) + TypeScript estricto + Tailwind v4 + shadcn/ui + Postgr
 
 ## Comandos
 
-- Instalar:            `pnpm install --frozen-lockfile`
-- Dev:                  `pnpm dev`
-- Lint:                 `pnpm lint`
-- Tipos:                `pnpm typecheck`
-- Unitarias:            `pnpm test:unit` (costeo FIFO/FEFO, ATP, reorder point, ABC, decimal)
-- Integración:          `pnpm test:int` (requiere PostgreSQL real: `pnpm db:up`; nunca mocks)
+- Instalar: `pnpm install --frozen-lockfile`
+- Dev: `pnpm dev`
+- Lint: `pnpm lint`
+- Tipos: `pnpm typecheck`
+- Unitarias: `pnpm test:unit` (costeo FIFO/FEFO, ATP, reorder point, ABC, decimal)
+- Integración: `pnpm test:int` (requiere PostgreSQL real: `pnpm db:up`; nunca mocks)
 - RLS / BOLA / tenancy: `pnpm test:security`
-- E2E:                  `pnpm test:e2e` (Playwright)
-- Build:                `pnpm build`
+- E2E: `pnpm test:e2e` (Playwright)
+- Build: `pnpm build`
 - Migración desde cero: `pnpm db:reset && pnpm drizzle-kit migrate`
-- Generar migración:    `pnpm drizzle-kit generate`
+- Generar migración: `pnpm drizzle-kit generate`
 - Verificación completa:`pnpm verify` (lint + typecheck + unit + migración vacía + integración + security + build + e2e)
 
 ## Arquitectura (resumen — detalle en `/docs/architecture/`)
@@ -106,15 +106,17 @@ Tema **claro forzado**, sin excepción (se anula el toggle de tema oscuro del SD
 
 ## Variables de entorno
 
-| Variable | Descripción |
-|---|---|
-| `MONDAY_CLIENT_ID` / `MONDAY_CLIENT_SECRET` / `MONDAY_SIGNING_SECRET` | OAuth + verificación JWT (session tokens y webhooks) |
-| `DATABASE_URL` | Pooler Supabase, puerto 6543, Transaction Mode |
-| `DIRECT_DATABASE_URL` | Puerto 5432, solo migraciones |
-| `SUPABASE_SERVICE_ROLE_KEY` | Bypasea RLS — solo server-side, nunca en bundle de cliente |
-| `UPSTASH_REDIS_URL` / `UPSTASH_REDIS_TOKEN` | Rate limiting |
-| `SENTRY_DSN` | Observabilidad |
-| `NEXT_PUBLIC_MONDAY_CLIENT_ID` | Única variable segura de exponer al cliente |
+| Variable                                    | Descripción                                                                                                                                                                     |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `MONDAY_CLIENT_ID`                          | ID de cliente OAuth de la app                                                                                                                                                   |
+| `MONDAY_CLIENT_SECRET`                      | Verifica (HS256) los **signed session tokens** de usuario (iframe) **y** los webhooks de **ciclo de vida de la app** (`install`/`uninstall`/`app_subscription_*`) — ver ADR-008 |
+| `MONDAY_SIGNING_SECRET`                     | Verifica (HS256) exclusivamente los webhooks de **board/integración** — secreto distinto al anterior, nunca intercambiable (ver ADR-008)                                        |
+| `DATABASE_URL`                              | Pooler Supabase, puerto 6543, Transaction Mode                                                                                                                                  |
+| `DIRECT_DATABASE_URL`                       | Puerto 5432, solo migraciones                                                                                                                                                   |
+| `SUPABASE_SERVICE_ROLE_KEY`                 | Bypasea RLS — solo server-side, nunca en bundle de cliente                                                                                                                      |
+| `UPSTASH_REDIS_URL` / `UPSTASH_REDIS_TOKEN` | Rate limiting                                                                                                                                                                   |
+| `SENTRY_DSN`                                | Observabilidad                                                                                                                                                                  |
+| `NEXT_PUBLIC_MONDAY_CLIENT_ID`              | Única variable segura de exponer al cliente                                                                                                                                     |
 
 ## Referencias completas
 

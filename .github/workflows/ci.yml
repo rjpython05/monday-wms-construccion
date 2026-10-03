@@ -1,0 +1,151 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DIRECT_DATABASE_URL: postgresql://wms_app:wms_local_dev_only@localhost:5432/wms_dev
+  DATABASE_URL: postgresql://wms_app:wms_local_dev_only@localhost:5432/wms_dev
+
+jobs:
+  pipeline:
+    name: Pipeline (lint → typecheck → unit → migración → integración → security → build → e2e)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: wms_app
+          POSTGRES_PASSWORD: wms_local_dev_only
+          POSTGRES_DB: wms_dev
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wms_app -d wms_dev"
+          --health-interval 2s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Instalar pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - name: Instalar Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: "pnpm"
+
+      - name: Instalar dependencias (lockfile congelado)
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Formato
+        run: pnpm format
+
+      - name: Tipos
+        run: pnpm typecheck
+
+      - name: Pruebas unitarias
+        run: pnpm test:unit
+
+      - name: Migración desde base vacía
+        run: pnpm drizzle-kit migrate
+        env:
+          DIRECT_DATABASE_URL: ${{ env.DIRECT_DATABASE_URL }}
+
+      - name: Pruebas de integración (PostgreSQL real)
+        run: pnpm test:int
+        env:
+          DIRECT_DATABASE_URL: ${{ env.DIRECT_DATABASE_URL }}
+
+      - name: Pruebas de seguridad (RLS / BOLA / tenancy)
+        run: pnpm test:security
+        env:
+          DIRECT_DATABASE_URL: ${{ env.DIRECT_DATABASE_URL }}
+
+      - name: Build
+        run: pnpm build
+
+      - name: Instalar navegadores de Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: E2E
+        run: pnpm test:e2e
+
+      - name: Verificación de trazabilidad
+        run: |
+          test -s docs/execution/traceability-index.md || {
+            echo "::error::docs/execution/traceability-index.md ausente o vacío"
+            exit 1
+          }
+
+      - name: Subir reporte de Playwright
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  dependency-audit:
+    name: Auditoría de dependencias (SCA)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4
+
+  secret-scan:
+    name: Escaneo de secretos (historial completo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout (historial completo)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  sbom:
+    name: SBOM (release — solo push a main)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Generar SBOM
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
+        with:
+          artifact-name: sbom-${{ github.sha }}.spdx.json
