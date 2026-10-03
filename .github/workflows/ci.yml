@@ -80,6 +80,19 @@ jobs:
 
       - name: Build
         run: pnpm build
+        env:
+          # Marcador no público (sin prefijo NEXT_PUBLIC_) usado solo para
+          # verificar en el paso siguiente que nunca llega al bundle de
+          # cliente (SEC-005). No es un secreto real.
+          AUDIT_SEC005_MARKER: "sec005-marker-9f3a7c21-must-not-leak-to-client"
+
+      - name: Verificación de que ningún valor no público llega al bundle de cliente (SEC-005)
+        run: |
+          if grep -rF "sec005-marker-9f3a7c21-must-not-leak-to-client" .next/static 2>/dev/null; then
+            echo "::error::Un valor no público (sin prefijo NEXT_PUBLIC_) apareció en .next/static — SEC-005 violado"
+            exit 1
+          fi
+          echo "OK: ningún valor no público apareció en el bundle de cliente (.next/static)"
 
       - name: Instalar navegadores de Playwright
         run: pnpm exec playwright install --with-deps chromium
@@ -145,7 +158,10 @@ jobs:
     timeout-minutes: 10
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
-      contents: write
+      # contents: write solo es necesario si se habilita
+      # dependency-snapshot: true (publica al API de Dependency Submission).
+      # Con la config actual (solo sube un artefacto del workflow) basta read.
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

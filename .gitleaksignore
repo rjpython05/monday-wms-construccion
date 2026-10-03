@@ -1,0 +1,6 @@
+# Falsos positivos confirmados: valores dummy de prueba en e2e/playwright,
+# nunca secretos reales (ver commit 55d90c3 y su fix de supresión inline
+# 0a71993). gitleaks escanea todo el historial, así que el hallazgo en el
+# commit original persiste aunque el código actual ya tenga `gitleaks:allow`.
+55d90c30615996b49d87f6642ec96972636fea40:e2e/env-validation.spec.ts:generic-api-key:16
+55d90c30615996b49d87f6642ec96972636fea40:playwright.config.ts:generic-api-key:26
