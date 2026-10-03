@@ -2,5 +2,16 @@
   "phase": "01",
   "status": "IN_IMPLEMENTATION",
   "generatedBy": "sesión de implementación, 2026-10-03",
-  "files": []
+  "files": ["claude-code-env-denial.txt"],
+  "localVerification": {
+    "date": "2026-10-03",
+    "lint": "pass",
+    "format": "pass",
+    "typecheck": "pass",
+    "test:unit": "pass",
+    "test:security": "pass (placeholder, sin RLS real hasta Fase 4)",
+    "build": "pass",
+    "test:e2e": "pass",
+    "test:int": "no ejecutado localmente (sin Docker disponible en esta máquina); se verifica en CI (runner de GitHub Actions con Docker nativo, servicio postgres:17)"
+  }
 }

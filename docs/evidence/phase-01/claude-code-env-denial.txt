@@ -1,0 +1,16 @@
+Evidencia AC-01-12 / SEC-004 — Fase 1
+Fecha: 2026-10-03
+Verificación: .claude/settings.json deniega la lectura de archivos .env* (excepto .env.example)
+
+Procedimiento:
+1. Se creó .env.local con un valor placeholder (no un secreto real):
+   MONDAY_CLIENT_SECRET=fake_placeholder_not_real
+2. Se intentó leer el archivo con la herramienta Read de Claude Code.
+
+Resultado real (no editado):
+  Read(C:\Users\20020032\Desktop\monday-wms-construccion\.env.local)
+  -> Error: "File is in a directory that is denied by your permission settings."
+
+Conclusión: el deny de .claude/settings.json sobre Read(./.env*) (salvo .env.example)
+está activo y bloqueó un intento real de lectura en esta sesión. Archivo de prueba
+.env.local eliminado tras la verificación (nunca commiteado; ya cubierto por .gitignore).
